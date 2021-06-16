@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using IWshRuntimeLibrary;
+using File = System.IO.File;
 
 namespace DesktopShortcut
 {
@@ -18,6 +19,8 @@ namespace DesktopShortcut
     /// </summary>
     public partial class App : Application
     {
+        private const string ConfigurationExt = ".config";
+
         protected override void OnStartup(StartupEventArgs e)
         {
             DispatcherUnhandledException +=OnDispatcherUnhandledException;
@@ -43,9 +46,18 @@ namespace DesktopShortcut
             {
                 throw new Exception("请配置应用程序路径");
             }
+            
             var applicationPath = Path.Combine(baseDirectory, settings["applicationPath"].Value);
-            var applicationConfiguration = ConfigurationManager.OpenExeConfiguration(applicationPath);
-            var applicationName = applicationConfiguration.AppSettings.Settings["applicationName"].Value;
+            var applicationConfigurationPath = applicationPath + ConfigurationExt;
+            // 复制应用程序并改名
+            var applicationName = settings["applicationName"].Value;
+            var exeName = applicationName + Path.GetExtension(applicationPath);
+            var exePath = Path.Combine(baseDirectory, exeName);
+            var exeConfigurationName = exeName + ConfigurationExt;
+            var exeConfigurationPath = Path.Combine(baseDirectory, exeConfigurationName);
+            File.Copy(applicationPath, exePath);
+            File.Copy(applicationConfigurationPath, exeConfigurationPath);
+            // 生存快捷方式
             var description = settings["description"].Value;
             var desktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             var shortcutPath = Path.Combine(desktopDirectory, $"{applicationName}.lnk");
