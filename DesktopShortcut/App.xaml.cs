@@ -63,8 +63,8 @@ namespace DesktopShortcut
             var shortcutPath = Path.Combine(desktopDirectory, $"{applicationName}.lnk");
             var shell = new WshShell();
             var shortcut = (IWshShortcut) shell.CreateShortcut(shortcutPath);
-            shortcut.TargetPath = applicationPath;
-            shortcut.WorkingDirectory = Path.GetDirectoryName(applicationPath);
+            shortcut.TargetPath = exePath;
+            shortcut.WorkingDirectory = Path.GetDirectoryName(exePath);
             shortcut.WindowStyle = 1;
             shortcut.Description = description;
             shortcut.Save();
