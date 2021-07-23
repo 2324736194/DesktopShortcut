@@ -55,8 +55,8 @@ namespace DesktopShortcut
             var exePath = Path.Combine(baseDirectory, exeName);
             var exeConfigurationName = exeName + ConfigurationExt;
             var exeConfigurationPath = Path.Combine(baseDirectory, exeConfigurationName);
-            File.Copy(applicationPath, exePath);
-            File.Copy(applicationConfigurationPath, exeConfigurationPath);
+            File.Copy(applicationPath, exePath, true);
+            File.Copy(applicationConfigurationPath, exeConfigurationPath, true);
             // 生存快捷方式
             var description = settings["description"].Value;
             var desktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
